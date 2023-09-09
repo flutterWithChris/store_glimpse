@@ -469,165 +469,188 @@ class LoadedPreview extends StatelessWidget {
                   ]),
                   const Gutter(),
                   // TODO: Fix this
-                  app?.screenshots != null && app!.screenshots!.isEmpty
-                      ? SizedBox(
-                          height: 370,
-                          width: 300,
-                          child: Material(
-                            color: Colors.grey[200],
-                            child: InkWell(
-                              onTap: () {},
-                              child: Container(),
-                            ),
-                          ))
-                      : SizedBox(
-                          height: 370,
-                          child: Theme(
-                            data: Theme.of(context).copyWith(
-                              scrollbarTheme: ScrollbarThemeData(
-                                thumbColor:
-                                    MaterialStateProperty.all(Colors.grey[400]),
-                                trackColor:
-                                    MaterialStateProperty.all(Colors.grey[200]),
-                                radius: const Radius.circular(0.0),
-                                thickness: MaterialStateProperty.all(16.0),
+                  SizedBox(
+                    height: 370,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        scrollbarTheme: ScrollbarThemeData(
+                          thumbColor:
+                              MaterialStateProperty.all(Colors.grey[400]),
+                          trackColor:
+                              MaterialStateProperty.all(Colors.grey[200]),
+                          radius: const Radius.circular(0.0),
+                          thickness: MaterialStateProperty.all(16.0),
+                        ),
+                      ),
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        controller: _scrollController,
+                        child: ListView.builder(
+                          itemExtent: 172,
+                          itemCount: app?.screenshots?.length ?? 6,
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            if (app?.screenshots == null ||
+                                app!.screenshots!.isEmpty) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: SizedBox(
+                                    height: 370,
+                                    width: 800,
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      color: Colors.grey[200],
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey[300]!,
+                                                width: 1.0),
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                          ),
+                                          child: const Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .question_circle_fill,
+                                                  color: Colors.grey,
+                                                  size: 50,
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                    )),
+                              );
+                            }
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey[300]!, width: 1.0),
+                                  image: const DecorationImage(
+                                      image: NetworkImage(
+                                          'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/07/6c/c9/076cc99d-cae3-446e-58e3-36ece27c267f/f7f3bb21-8f3f-4a48-b1ba-45bdb95a6ddb_Frame_5.jpg/230x0w.webp'),
+                                      fit: BoxFit.cover),
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
                               ),
-                            ),
-                            child: Scrollbar(
-                              thumbVisibility: true,
-                              trackVisibility: true,
-                              controller: _scrollController,
-                              child: ListView.builder(
-                                itemExtent: 172,
-                                itemCount: 6,
-                                padding: const EdgeInsets.only(bottom: 20.0),
-                                controller: _scrollController,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey[300]!,
-                                            width: 1.0),
-                                        image: const DecorationImage(
-                                            image: NetworkImage(
-                                                'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/07/6c/c9/076cc99d-cae3-446e-58e3-36ece27c267f/f7f3bb21-8f3f-4a48-b1ba-45bdb95a6ddb_Frame_5.jpg/230x0w.webp'),
-                                            fit: BoxFit.cover),
-                                        color: Colors.grey,
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                // children: [
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/07/6c/c9/076cc99d-cae3-446e-58e3-36ece27c267f/f7f3bb21-8f3f-4a48-b1ba-45bdb95a6ddb_Frame_5.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/c7/f9/3c/c7f93c2b-2cb6-deba-06e0-215b8e9b7120/ac09d2ce-e354-4853-b08b-d66980ede047_Frame_8.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/d0/c6/84/d0c68498-3c6f-9eea-2afd-61983f226bcd/dfdf8c28-c73c-43b4-babe-a400138a14c7_Frame_24.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/e9/2c/11/e92c11b5-330d-91ea-2302-094b3569c2ef/aea6592a-d120-444a-a2a3-74b75050eeea_Frame_6.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                //   Container(
-                                //     decoration: BoxDecoration(
-                                //       border: Border.all(
-                                //           color: Colors.grey[300]!,
-                                //           width: 1.0),
-                                //       image: const DecorationImage(
-                                //           image: NetworkImage(
-                                //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
-                                //           fit: BoxFit.cover),
-                                //       color: Colors.grey,
-                                //       borderRadius:
-                                //           BorderRadius.circular(18.0),
-                                //     ),
-                                //   ),
-                                // ],
-                              ),
-                            ),
-                          ),
-                        )
+                            );
+                          },
+                          // children: [
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/07/6c/c9/076cc99d-cae3-446e-58e3-36ece27c267f/f7f3bb21-8f3f-4a48-b1ba-45bdb95a6ddb_Frame_5.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/c7/f9/3c/c7f93c2b-2cb6-deba-06e0-215b8e9b7120/ac09d2ce-e354-4853-b08b-d66980ede047_Frame_8.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/d0/c6/84/d0c68498-3c6f-9eea-2afd-61983f226bcd/dfdf8c28-c73c-43b4-babe-a400138a14c7_Frame_24.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/e9/2c/11/e92c11b5-330d-91ea-2302-094b3569c2ef/aea6592a-d120-444a-a2a3-74b75050eeea_Frame_6.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          //   Container(
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //           color: Colors.grey[300]!,
+                          //           width: 1.0),
+                          //       image: const DecorationImage(
+                          //           image: NetworkImage(
+                          //               'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/db/54/dd/db54ddb3-8353-e828-88f8-126ddcfefc75/4135bb2d-b205-43da-b114-07bd4005741c_Frame_9.jpg/230x0w.webp'),
+                          //           fit: BoxFit.cover),
+                          //       color: Colors.grey,
+                          //       borderRadius:
+                          //           BorderRadius.circular(18.0),
+                          //     ),
+                          //   ),
+                          // ],
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
               const Gutter(),
@@ -637,8 +660,9 @@ class LoadedPreview extends StatelessWidget {
               const GutterSmall(),
               Column(
                 children: [
-                  Text(
-                    '''
+                  app?.description != null
+                      ? Text(
+                          '''
 New 'Explore' page built with AI recommends places for you to visit!
                         
                         
@@ -667,13 +691,21 @@ Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
                         
 Privacy Policy: https://www.termsfeed.com/live/80c41a79-6cf2-404c-9daa-b469b07a7c58
                         ''',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontSize: 12.0),
-                  )
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontSize: 12.0),
+                        )
+                      : const SizedBox(
+                          width: 800,
+                          child: CupertinoTextField(
+                            textCapitalization: TextCapitalization.sentences,
+                            placeholder: 'Description',
+                            maxLines: 10,
+                          )),
                 ],
               ),
+              const GutterSmall(),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1409,6 +1441,7 @@ class AgeRatingPicker extends StatelessWidget {
         Row(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Free'),
                 const GutterTiny(),
@@ -1417,6 +1450,7 @@ class AgeRatingPicker extends StatelessWidget {
             ),
             const Gutter(),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('In-App Purchases'),
                 const GutterTiny(),
