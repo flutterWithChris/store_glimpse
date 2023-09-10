@@ -1,15 +1,16 @@
 class App {
-  String? title;
+  String? name;
   String? subtitle;
   String? appIcon;
   String? appSeller;
   double? price;
   bool? inAppPurchases;
-  int? ageRating;
+  String? ageRating;
   List<String>? screenshots;
   String? description;
   String? whatsNew;
   String? version;
+  String? minimumIOSVersion;
   double? appSize;
   String? category;
   String? compatibility;
@@ -17,7 +18,7 @@ class App {
   String? copyright;
 
   App({
-    this.title,
+    this.name,
     this.subtitle,
     this.appIcon,
     this.appSeller,
@@ -28,6 +29,7 @@ class App {
     this.description,
     this.whatsNew,
     this.version,
+    this.minimumIOSVersion,
     this.appSize,
     this.category,
     this.compatibility,
@@ -36,17 +38,18 @@ class App {
   });
 
   App copyWith({
-    String? title,
+    String? name,
     String? subtitle,
     String? appIcon,
     String? appSeller,
     double? price,
     bool? inAppPurchases,
-    int? ageRating,
+    String? ageRating,
     List<String>? screenshots,
     String? description,
     String? whatsNew,
     String? version,
+    String? minimumIOSVersion,
     double? appSize,
     String? category,
     String? compatibility,
@@ -54,7 +57,7 @@ class App {
     String? copyRight,
   }) {
     return App(
-      title: title ?? this.title,
+      name: name ?? this.name,
       subtitle: subtitle ?? this.subtitle,
       appIcon: appIcon ?? this.appIcon,
       appSeller: appSeller ?? this.appSeller,
@@ -65,6 +68,7 @@ class App {
       description: description ?? this.description,
       whatsNew: whatsNew ?? this.whatsNew,
       version: version ?? this.version,
+      minimumIOSVersion: minimumIOSVersion ?? this.minimumIOSVersion,
       appSize: appSize ?? this.appSize,
       category: category ?? this.category,
       compatibility: compatibility ?? this.compatibility,

@@ -8,7 +8,7 @@ part 'preview_event.dart';
 part 'preview_state.dart';
 
 class PreviewBloc extends Bloc<PreviewEvent, PreviewState> {
-  PreviewBloc() : super(PreviewInitial()) {
+  PreviewBloc() : super(PreviewInitial(app: App())) {
     on<LoadPreview>((event, emit) async {
       emit(PreviewLoading());
       await Future.delayed(const Duration(seconds: 1));
@@ -28,8 +28,6 @@ class PreviewBloc extends Bloc<PreviewEvent, PreviewState> {
       emit(PreviewLoaded(app: event.app));
     });
     on<UpdatePreview>((event, emit) async {
-      emit(PreviewLoading());
-      await Future.delayed(const Duration(seconds: 1));
       emit(PreviewLoaded(app: event.app));
     });
     on<DeletePreview>((event, emit) async {

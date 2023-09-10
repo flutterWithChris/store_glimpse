@@ -10,7 +10,11 @@ sealed class PreviewState extends Equatable {
   List<Object?> get props => [app];
 }
 
-final class PreviewInitial extends PreviewState {}
+final class PreviewInitial extends PreviewState {
+  @override
+  final App app;
+  const PreviewInitial({required this.app});
+}
 
 class PreviewLoading extends PreviewState {}
 
