@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'StoreGlimpse',
         theme: const CupertinoThemeData(
-          brightness: Brightness.light,
-        ),
+            brightness: Brightness.light, applyThemeToAll: true),
       ),
     );
   }
