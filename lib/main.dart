@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_glimpse/app/router/app_router.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
+import 'package:store_glimpse/stripe/bloc/stripe_bloc.dart';
+import 'package:store_glimpse/stripe/repository/stripe_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,16 +16,27 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PreviewBloc(),
-      child: CupertinoApp.router(
-        routeInformationParser: goRouter.routeInformationParser,
-        routerDelegate: goRouter.routerDelegate,
-        routeInformationProvider: goRouter.routeInformationProvider,
-        debugShowCheckedModeBanner: false,
-        title: 'StoreGlimpse',
-        theme: const CupertinoThemeData(
-            brightness: Brightness.light, applyThemeToAll: true),
+    return RepositoryProvider(
+      create: (context) => StripeRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => PreviewBloc(),
+          ),
+          BlocProvider(
+            create: (context) =>
+                StripeBloc(stripeRepository: context.read<StripeRepository>()),
+          ),
+        ],
+        child: CupertinoApp.router(
+          routeInformationParser: goRouter.routeInformationParser,
+          routerDelegate: goRouter.routerDelegate,
+          routeInformationProvider: goRouter.routeInformationProvider,
+          debugShowCheckedModeBanner: false,
+          title: 'StoreGlimpse',
+          theme: const CupertinoThemeData(
+              brightness: Brightness.light, applyThemeToAll: true),
+        ),
       ),
     );
   }

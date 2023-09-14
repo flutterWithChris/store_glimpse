@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:store_glimpse/profile/model/user.dart';
+import 'package:store_glimpse/stripe/bloc/stripe_bloc.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -85,10 +88,34 @@ class LandingPage extends StatelessWidget {
                                       .titleLarge
                                       ?.copyWith(color: Colors.black87)),
                               const Gutter(),
-                              CupertinoButton.filled(
-                                minSize: 0,
-                                child: const Text('Get StoreGlimpse'),
-                                onPressed: () {},
+                              BlocBuilder<StripeBloc, StripeState>(
+                                builder: (context, state) {
+                                  if (state is StripeLoading) {
+                                    return CupertinoButton.filled(
+                                      minSize: 0,
+                                      child: const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CupertinoActivityIndicator(
+                                            color: Colors.white,
+                                          ),
+                                          GutterSmall(),
+                                          Text('Loading...'),
+                                        ],
+                                      ),
+                                      onPressed: () {},
+                                    );
+                                  }
+                                  return CupertinoButton.filled(
+                                    minSize: 0,
+                                    child: const Text('Get StoreGlimpse'),
+                                    onPressed: () {
+                                      context
+                                          .read<StripeBloc>()
+                                          .add(InitiatePurchase(User()));
+                                    },
+                                  );
+                                },
                               ),
                             ],
                           ),
