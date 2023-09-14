@@ -57,3 +57,15 @@ app.use(function (req, res, next) {
     next();
   });
   
+// Use body-parser to retrieve the raw body as a buffer
+const bodyParser = require('body-parser');
+
+exports.webhook = functions.https.onRequest((request, response) => {
+  bodyParser.raw({ type: 'application/json' })(request, response, () => {
+    const payload = request.body;
+
+    console.log("Got payload: " + payload);
+
+    response.status(200).end();
+  });
+});

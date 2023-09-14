@@ -139,7 +139,7 @@ class LandingPage extends StatelessWidget {
                                   const BorderRadius.all(Radius.circular(16.0)),
                               image: const DecorationImage(
                                   image: AssetImage(
-                                      'lib/assets/build_screenshot.png'),
+                                      'lib/assets/sample_screenshot.jpg'),
                                   fit: BoxFit.cover)),
                         ),
                       ),
@@ -180,7 +180,7 @@ class LandingPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const GutterSmall(),
+                  const Gutter(),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -189,7 +189,7 @@ class LandingPage extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(16.0),
                           child: BenefitListItem(
-                            icon: Icons.search,
+                            icon: Icons.search_rounded,
                             title: 'Optimize Your App Store Listing',
                             description:
                                 'Nail your copy, screenshots, and app\npreview to maximize downloads.',
@@ -202,7 +202,7 @@ class LandingPage extends StatelessWidget {
                           padding: EdgeInsets.all(16.0),
                           child: BenefitListItem(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            icon: Icons.check,
+                            icon: Icons.check_rounded,
                             title: 'Get It Right the First Time.',
                             description:
                                 'Make sure your app looks great before\nyou publish it to the App Store.',
