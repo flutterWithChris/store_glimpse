@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
+import 'dart:html' as html
+  if (kIsWeb) 'dart:html';
 
 class StripeRepository {
   Future<void> initiatePurchase() async {
@@ -14,7 +17,9 @@ class StripeRepository {
       final jsonResponse = jsonDecode(response.body);
       final url = jsonResponse['url'];
       if (await canLaunchUrlString(url)) {
-        await launchUrlString(url);
+        kIsWeb
+            ? html.window.location.href = url
+            : await launchUrlString(url);
       } else {
         throw Exception('Could not launch $url');
       }

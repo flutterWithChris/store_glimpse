@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class App {
+  String? id;
   String? name;
   String? subtitle;
   String? appIcon;
@@ -18,6 +21,7 @@ class App {
   String? copyright;
 
   App({
+    this.id,
     this.name,
     this.subtitle,
     this.appIcon,
@@ -38,6 +42,7 @@ class App {
   });
 
   App copyWith({
+    String? id,
     String? name,
     String? subtitle,
     String? appIcon,
@@ -57,6 +62,7 @@ class App {
     String? copyRight,
   }) {
     return App(
+      id: id ?? this.id,
       name: name ?? this.name,
       subtitle: subtitle ?? this.subtitle,
       appIcon: appIcon ?? this.appIcon,
@@ -73,6 +79,50 @@ class App {
       category: category ?? this.category,
       compatibility: compatibility ?? this.compatibility,
       languages: languages ?? this.languages,
+    );
+  }
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'id': id,
+      'name': name,
+      'subtitle': subtitle,
+      'appIcon': appIcon,
+      'appSeller': appSeller,
+      'price': price,
+      'inAppPurchases': inAppPurchases,
+      'ageRating': ageRating,
+      'screenshots': screenshots,
+      'description': description,
+      'whatsNew': whatsNew,
+      'version': version,
+      'minimumIOSVersion': minimumIOSVersion,
+      'appSize': appSize,
+      'category': category,
+      'compatibility': compatibility,
+      'languages': languages,
+    };
+  }
+
+  factory App.fromDocument(DocumentSnapshot doc) {
+    return App(
+      id: doc['id'],
+      name: doc['name'],
+      subtitle: doc['subtitle'],
+      appIcon: doc['appIcon'],
+      appSeller: doc['appSeller'],
+      price: doc['price'],
+      inAppPurchases: doc['inAppPurchases'],
+      ageRating: doc['ageRating'],
+      screenshots: doc['screenshots'],
+      description: doc['description'],
+      whatsNew: doc['whatsNew'],
+      version: doc['version'],
+      minimumIOSVersion: doc['minimumIOSVersion'],
+      appSize: doc['appSize'],
+      category: doc['category'],
+      compatibility: doc['compatibility'],
+      languages: doc['languages'],
     );
   }
 }

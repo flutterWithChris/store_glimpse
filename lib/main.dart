@@ -1,12 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_glimpse/app/router/app_router.dart';
+import 'package:store_glimpse/auth/bloc/auth_bloc.dart';
+import 'package:store_glimpse/auth/repository/auth_repository.dart';
+import 'package:store_glimpse/firebase_options.dart';
+import 'package:store_glimpse/onboarding/bloc/onboarding_bloc.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
+import 'package:store_glimpse/preview/repository/preview_repository.dart';
+import 'package:store_glimpse/profile/repository/user_respository.dart';
+import 'package:store_glimpse/signup/cubit/signup_cubit.dart';
 import 'package:store_glimpse/stripe/bloc/stripe_bloc.dart';
 import 'package:store_glimpse/stripe/repository/stripe_repository.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAuth.instance.signOut();
   runApp(const MyApp());
 }
 
@@ -16,16 +28,43 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => StripeRepository(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => StripeRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => AuthRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => UserRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => PreviewRepository(),
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => PreviewBloc(),
+            create: (context) => AuthBloc(
+              authRepository: context.read<AuthRepository>(),
+            ),
           ),
           BlocProvider(
             create: (context) =>
                 StripeBloc(stripeRepository: context.read<StripeRepository>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                SignupCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => OnboardingBloc(
+                userRepository: context.read<UserRepository>(),
+                stripeBloc: context.read<StripeBloc>()),
+          ),
+          BlocProvider(
+            create: (context) => PreviewBloc(),
           ),
         ],
         child: CupertinoApp.router(
