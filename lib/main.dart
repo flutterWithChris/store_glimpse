@@ -10,6 +10,7 @@ import 'package:store_glimpse/firebase_options.dart';
 import 'package:store_glimpse/onboarding/bloc/onboarding_bloc.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
 import 'package:store_glimpse/preview/repository/preview_repository.dart';
+import 'package:store_glimpse/profile/bloc/profile_bloc.dart';
 import 'package:store_glimpse/profile/repository/user_respository.dart';
 import 'package:store_glimpse/signup/cubit/signup_cubit.dart';
 import 'package:store_glimpse/stripe/bloc/stripe_bloc.dart';
@@ -62,6 +63,11 @@ class MyApp extends StatelessWidget {
             create: (context) => OnboardingBloc(
                 userRepository: context.read<UserRepository>(),
                 stripeBloc: context.read<StripeBloc>()),
+          ),
+          BlocProvider(
+            create: (context) => ProfileBloc(
+              userRepository: context.read<UserRepository>(),
+            ),
           ),
           BlocProvider(
             create: (context) => PreviewBloc(),

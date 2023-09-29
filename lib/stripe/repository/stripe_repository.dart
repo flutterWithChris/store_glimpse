@@ -8,11 +8,17 @@ import 'dart:html' as html
   if (kIsWeb) 'dart:html';
 
 class StripeRepository {
-  Future<void> initiatePurchase() async {
+  Future<void> initiatePurchase(
+      {required String userID, required String email}
+  ) async {
     try {
       final response = await http.post(
         Uri.parse(
             'https://us-central1-storeglimpse-c926d.cloudfunctions.net/createCheckoutSession'),
+            body:  {
+              'userID': userID,
+              'email': email,
+              }
       );
       final jsonResponse = jsonDecode(response.body);
       final url = jsonResponse['url'];

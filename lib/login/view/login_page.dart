@@ -39,10 +39,15 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const Gutter(),
-              CupertinoButton.filled(
-                minSize: 0,
-                child: const Text('Login'),
-                onPressed: () => Navigator.pushNamed(context, '/'),
+              SizedBox(
+                height: 36,
+                child: FittedBox(
+                  child: CupertinoButton.filled(
+                    minSize: 0,
+                    child: const Text('Login'),
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                  ),
+                ),
               ),
               const GutterSmall(),
               CupertinoButton(

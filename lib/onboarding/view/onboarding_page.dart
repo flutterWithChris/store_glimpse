@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_glimpse/app/router/app_router.dart';
 import 'package:store_glimpse/auth/bloc/auth_bloc.dart';
 import 'package:store_glimpse/onboarding/bloc/onboarding_bloc.dart';
 import 'package:store_glimpse/profile/model/user.dart';
@@ -132,6 +134,36 @@ class CreateAccountPage extends StatelessWidget {
                     ? const CupertinoActivityIndicator()
                     : const Text('Submit'),
               ),
+              const GutterTiny(),
+              SizedBox(
+                height: 46,
+                child: FittedBox(
+                  child: CupertinoButton(
+                      minSize: 0,
+                      child: const Text.rich(
+                        TextSpan(
+                          text: 'Already have an account? ',
+                          children: [
+                            TextSpan(
+                              text: 'Log in',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onPressed: () async {
+                        await SharedPreferences.getInstance().then((value) {
+                          value.setBool('completedOnboarding', true);
+                          return value;
+                        }).then((value) {
+                          goRouter.go('/login');
+                          return value;
+                        });
+                      }),
+                ),
+              )
             ],
           ),
         );

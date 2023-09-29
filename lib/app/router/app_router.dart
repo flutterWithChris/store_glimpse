@@ -6,6 +6,8 @@ import 'package:store_glimpse/landing/landing_page.dart';
 import 'package:store_glimpse/login/view/login_page.dart';
 import 'package:store_glimpse/onboarding/view/onboarding_page.dart';
 import 'package:store_glimpse/preview/preview_page.dart';
+import 'package:store_glimpse/stripe/view/stripe_cancelled.dart';
+import 'package:store_glimpse/stripe/view/stripe_success.dart';
 
 GoRouter goRouter = GoRouter(
     redirect: (context, state) async {
@@ -16,7 +18,10 @@ GoRouter goRouter = GoRouter(
       bool isLoggingIn = state.uri.pathSegments.contains('login');
       bool isOnboarding = state.uri.pathSegments.contains('onboarding');
       bool completedOnboarding = prefs.getBool('completedOnboarding') ?? false;
-
+      if (state.uri.toString().contains('success') ||
+          state.uri.toString().contains('cancel')) {
+        return null;
+      }
       if (completedOnboarding == false) {
         if (isOnboarding) {
           return null;
@@ -54,7 +59,9 @@ GoRouter goRouter = GoRouter(
         builder: (context, state) => const OnboardingPage(),
       ),
       GoRoute(
-          path: '/success', builder: (context, state) => const LandingPage()),
+          path: '/success',
+          builder: (context, state) => const StripeSuccessPage()),
       GoRoute(
-          path: '/cancel', builder: (context, state) => const LandingPage()),
+          path: '/cancel',
+          builder: (context, state) => const StripeCancelledPage()),
     ]);

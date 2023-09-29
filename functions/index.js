@@ -9,6 +9,8 @@
  */
 
 const functions = require("firebase-functions");
+const admin = require('firebase-admin');
+admin.initializeApp();
 const stripe = require("stripe")(process.env.STRIPE_MAG);
 const express = require("express");
 const app = express();
@@ -19,6 +21,8 @@ const whitelist = ['https://storeglimpse-c926d.web.app/',
 exports.createCheckoutSession = functions.https.onRequest(async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
+      client_reference_id: req.body.userID,
+      customer_email: req.body.email,
       payment_method_types: ["card"],
       line_items: [
         {
@@ -27,8 +31,8 @@ exports.createCheckoutSession = functions.https.onRequest(async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "https://storeglimpse-c926d.web.app/success",
-      cancel_url: "https://storeglimpse-c926d.web.app/cancel",
+      success_url: "http://localhost:8000/#/success",
+      cancel_url: "http://localhost:8000/#/cancel",
     });
     res.send({url: session.url});
   } catch (error) {
@@ -60,12 +64,48 @@ app.use(function (req, res, next) {
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser');
 
-exports.webhook = functions.https.onRequest((request, response) => {
-  bodyParser.raw({ type: 'application/json' })(request, response, () => {
-    const payload = request.body;
+const endpointSecret = process.env.WH_SEC;
 
-    console.log("Got payload: " + payload);
+exports.webhook = functions.https.onRequest(async (request, response) => {
+  const sig = request.headers['stripe-signature'];
 
-    response.status(200).end();
-  });
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.async_payment_failed':
+      const checkoutSessionAsyncPaymentFailed = event.data.object;
+      // Define and call a function to handle the event checkout.session.async_payment_failed
+      break;
+    case 'checkout.session.async_payment_succeeded':
+      const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+      // Define and call a function to handle the event checkout.session.async_payment_succeeded
+      break;
+    case 'checkout.session.completed':
+      const checkoutSessionCompleted = event.data.object;
+      const userID = checkoutSessionCompleted.client_reference_id;
+      await admin.firestore().collection('users').doc(userID).update({
+        paymentStatus: 'paid',
+        paymentIntentID: checkoutSessionCompleted.payment_intent,
+        checkoutSessionID: checkoutSessionCompleted.id,
+      });
+      break;
+    case 'checkout.session.expired':
+      const checkoutSessionExpired = event.data.object;
+      // Define and call a function to handle the event checkout.session.expired
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  response.send();
 });

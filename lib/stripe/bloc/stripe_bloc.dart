@@ -14,7 +14,8 @@ class StripeBloc extends Bloc<StripeEvent, StripeState> {
     on<LoadStripe>((event, emit) {});
     on<InitiatePurchase>((event, emit) async {
       emit(StripeLoading());
-      await _stripeRepository.initiatePurchase();
+      await _stripeRepository.initiatePurchase(
+          userID: event.user.id!, email: event.user.email!);
       emit(StripeLoaded());
     });
   }
