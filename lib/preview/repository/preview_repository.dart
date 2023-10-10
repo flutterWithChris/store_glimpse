@@ -2,41 +2,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:store_glimpse/preview/model/app.dart';
-import 'package:store_glimpse/profile/model/user.dart';
 
 class PreviewRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<void> createPreview(User user, App app) async {
+  Future<String> createPreview(String userID, App app) async {
     try {
       var docRef = _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc();
 
       await docRef.set(app.copyWith(id: docRef.id).toDocument());
+
+      return docRef.id;
     } catch (e) {
       throw Exception('Error creating app');
     }
   }
 
-  Stream<List<App>> getPreviews(User user) {
+  Stream<List<App>> getPreviews(String userID) {
     return _firestore
         .collection('users')
-        .doc(user.id)
+        .doc(userID)
         .collection('previews')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => App.fromDocument(doc)).toList());
   }
 
-  Future<void> updatePreview(User user, App app) async {
+  Future<void> updatePreview(String userID, App app) async {
     try {
       await _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc(app.id)
           .update(app.toDocument());
@@ -45,11 +46,11 @@ class PreviewRepository {
     }
   }
 
-  Future<void> deletePreview(User user, App app) async {
+  Future<void> deletePreview(String userID, App app) async {
     try {
       await _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc(app.id)
           .delete();
@@ -59,12 +60,12 @@ class PreviewRepository {
   }
 
   // Upload App Icon
-  Future<void> uploadAppIcon(User user, App app, XFile appIcon) async {
+  Future<void> uploadAppIcon(String userID, App app, XFile appIcon) async {
     try {
       var ref = _storage
           .ref()
           .child('users')
-          .child(user.id!)
+          .child(userID)
           .child('previews')
           .child(app.id!)
           .child('appIcon.png');
@@ -74,25 +75,27 @@ class PreviewRepository {
 
       await _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc(app.id)
           .update({'appIcon': url});
     } catch (e) {
+      print(e);
       throw Exception('Error uploading app icon');
     }
   }
 
   // Upload App Screenshots
   Future<void> uploadAppScreenshots(
-      User user, App app, List<XFile> appScreenshots) async {
+      String userID, App app, List<XFile> appScreenshots) async {
     try {
       var ref = _storage
           .ref()
           .child('users')
-          .child(user.id!)
+          .child(userID)
           .child('previews')
-          .child(app.id!);
+          .child(app.id!)
+          .child('screenshots');
 
       for (var i = 0; i < appScreenshots.length; i++) {
         var screenshotRef = ref.child('appScreenshot$i.png');
@@ -101,7 +104,7 @@ class PreviewRepository {
 
         await _firestore
             .collection('users')
-            .doc(user.id)
+            .doc(userID)
             .collection('previews')
             .doc(app.id)
             .update({
@@ -114,12 +117,12 @@ class PreviewRepository {
   }
 
   // Delete App Icon
-  Future<void> deleteAppIcon(User user, App app) async {
+  Future<void> deleteAppIcon(String userID, App app) async {
     try {
       var ref = _storage
           .ref()
           .child('users')
-          .child(user.id!)
+          .child(userID)
           .child('previews')
           .child(app.id!)
           .child('appIcon.png');
@@ -128,7 +131,7 @@ class PreviewRepository {
 
       await _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc(app.id)
           .update({'appIcon': null});
@@ -138,14 +141,15 @@ class PreviewRepository {
   }
 
   // Delete App Screenshots
-  Future<void> deleteAppScreenshots(User user, App app) async {
+  Future<void> deleteAppScreenshots(String userID, App app) async {
     try {
       var ref = _storage
           .ref()
           .child('users')
-          .child(user.id!)
+          .child(userID)
           .child('previews')
-          .child(app.id!);
+          .child(app.id!)
+          .child('screenshots');
 
       for (var i = 0; i < app.screenshots!.length; i++) {
         var screenshotRef = ref.child('appScreenshot$i.png');
@@ -153,7 +157,7 @@ class PreviewRepository {
 
         await _firestore
             .collection('users')
-            .doc(user.id)
+            .doc(userID)
             .collection('previews')
             .doc(app.id)
             .update({
@@ -167,21 +171,22 @@ class PreviewRepository {
 
   // Delete single App Screenshot
   Future<void> deleteSingleAppScreenshot(
-      User user, App app, String screenshot) async {
+      String userID, App app, String screenshot) async {
     try {
       var ref = _storage
           .ref()
           .child('users')
-          .child(user.id!)
+          .child(userID)
           .child('previews')
           .child(app.id!)
+          .child('screenshots')
           .child(screenshot);
 
       await ref.delete();
 
       await _firestore
           .collection('users')
-          .doc(user.id)
+          .doc(userID)
           .collection('previews')
           .doc(app.id)
           .update({

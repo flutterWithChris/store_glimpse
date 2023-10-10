@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
 
 import 'model/app.dart';
@@ -53,10 +54,15 @@ class _LoadedPreviewState extends State<LoadedPreview> {
                           onTap: () async {
                             await ImagePicker()
                                 .pickImage(source: ImageSource.gallery)
-                                .then((image) {
+                                .then((image) async {
                               if (image != null) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String userID = prefs.getString('userID')!;
                                 context.read<PreviewBloc>().add(UpdateAppIcon(
-                                    app: widget.app!, icon: image));
+                                    userID: userID,
+                                    app: widget.app!,
+                                    icon: image));
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -269,11 +275,17 @@ class _LoadedPreviewState extends State<LoadedPreview> {
                                               onTap: () async {
                                                 await ImagePicker()
                                                     .pickMultiImage()
-                                                    .then((images) {
+                                                    .then((images) async {
                                                   if (images.isNotEmpty) {
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    String userID = prefs
+                                                        .getString('userID')!;
                                                     context
                                                         .read<PreviewBloc>()
                                                         .add(AddScreenshots(
+                                                            userID: userID,
                                                             app: widget.app!,
                                                             screenshots:
                                                                 images));

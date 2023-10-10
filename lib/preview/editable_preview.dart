@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
 import 'package:store_glimpse/preview/preview_page.dart';
 
@@ -230,74 +231,91 @@ class _EditablePreviewState extends State<EditablePreview> {
                                     child: FittedBox(
                                       child: CupertinoButton.filled(
                                           minSize: 0,
-                                          onPressed: () {
-                                            if (widget.app != null) {
-                                              context
-                                                  .read<PreviewBloc>()
-                                                  .add(UpdatePreview(
-                                                      app: widget.app!.copyWith(
-                                                    name: _nameController.text,
-                                                    subtitle:
-                                                        _subtitleController
-                                                            .text,
-                                                    appSeller:
-                                                        _appSellerController
-                                                            .text,
-                                                    price: double.tryParse(
-                                                        _priceController.text),
-                                                    version:
-                                                        _versionController.text,
-                                                    description:
-                                                        _descriptionController
-                                                            .text,
-                                                    whatsNew:
-                                                        _whatsNewController
-                                                            .text,
-                                                    category:
-                                                        _categoryController
-                                                            .text,
-                                                    languages:
-                                                        _languagesController
-                                                            .text,
-                                                    appSize: double.tryParse(
-                                                        _sizeController.text),
-                                                    inAppPurchases:
-                                                        _hasInAppPurchases,
-                                                  )));
-                                            } else {
-                                              context
-                                                  .read<PreviewBloc>()
-                                                  .add(CreatePreview(
-                                                      app: App(
-                                                    name: _nameController.text,
-                                                    subtitle:
-                                                        _subtitleController
-                                                            .text,
-                                                    appSeller:
-                                                        _appSellerController
-                                                            .text,
-                                                    price: double.tryParse(
-                                                        _priceController.text),
-                                                    version:
-                                                        _versionController.text,
-                                                    description:
-                                                        _descriptionController
-                                                            .text,
-                                                    whatsNew:
-                                                        _whatsNewController
-                                                            .text,
-                                                    category:
-                                                        _categoryController
-                                                            .text,
-                                                    languages:
-                                                        _languagesController
-                                                            .text,
-                                                    appSize: double.tryParse(
-                                                        _sizeController.text),
-                                                    inAppPurchases:
-                                                        _hasInAppPurchases,
-                                                  )));
-                                            }
+                                          onPressed: () async {
+                                            // if (widget.app != null) {
+                                            //   context
+                                            //       .read<PreviewBloc>()
+                                            //       .add(UpdatePreview(
+                                            //           userID: userID,
+                                            //           app: widget.app!.copyWith(
+                                            //             name: _nameController
+                                            //                 .text,
+                                            //             subtitle:
+                                            //                 _subtitleController
+                                            //                     .text,
+                                            //             appSeller:
+                                            //                 _appSellerController
+                                            //                     .text,
+                                            //             price: double.tryParse(
+                                            //                 _priceController
+                                            //                     .text),
+                                            //             version:
+                                            //                 _versionController
+                                            //                     .text,
+                                            //             description:
+                                            //                 _descriptionController
+                                            //                     .text,
+                                            //             whatsNew:
+                                            //                 _whatsNewController
+                                            //                     .text,
+                                            //             category:
+                                            //                 _categoryController
+                                            //                     .text,
+                                            //             languages:
+                                            //                 _languagesController
+                                            //                     .text,
+                                            //             appSize:
+                                            //                 double.tryParse(
+                                            //                     _sizeController
+                                            //                         .text),
+                                            //             inAppPurchases:
+                                            //                 _hasInAppPurchases,
+                                            //           )));
+                                            // }
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            String userID =
+                                                prefs.getString('userID')!;
+                                            context.read<PreviewBloc>().add(
+                                                  CreatePreview(
+                                                    userID: userID,
+                                                    app: App(
+                                                      name:
+                                                          _nameController.text,
+                                                      subtitle:
+                                                          _subtitleController
+                                                              .text,
+                                                      appSeller:
+                                                          _appSellerController
+                                                              .text,
+                                                      price: double.tryParse(
+                                                          _priceController
+                                                              .text),
+                                                      version:
+                                                          _versionController
+                                                              .text,
+                                                      description:
+                                                          _descriptionController
+                                                              .text,
+                                                      whatsNew:
+                                                          _whatsNewController
+                                                              .text,
+                                                      category:
+                                                          _categoryController
+                                                              .text,
+                                                      languages:
+                                                          _languagesController
+                                                              .text,
+                                                      appSize: double.tryParse(
+                                                          _sizeController.text),
+                                                      inAppPurchases:
+                                                          _hasInAppPurchases,
+                                                    ),
+                                                    screenshots: _screenshots,
+                                                    icon: _appIcon!,
+                                                  ),
+                                                );
                                           },
                                           child: const Text('Save',
                                               style: TextStyle(fontSize: 20))),

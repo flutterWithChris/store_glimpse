@@ -76,7 +76,9 @@ class MyApp extends StatelessWidget {
             ),
           ),
           BlocProvider(
-            create: (context) => PreviewBloc(),
+            create: (context) => PreviewBloc(
+              previewRepository: context.read<PreviewRepository>(),
+            ),
           ),
         ],
         child: CupertinoApp.router(
