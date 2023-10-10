@@ -43,7 +43,7 @@ class StripeSuccessPage extends StatelessWidget {
                     await prefs
                         .setBool('completedOnboarding', true)
                         .then((value) {
-                      goRouter.go('/welcome');
+                      goRouter.go('/');
                     });
                   });
                 },

@@ -117,7 +117,8 @@ class _EditablePreviewState extends State<EditablePreview> {
                                             : null,
                                     borderRadius: BorderRadius.circular(50.0),
                                   ),
-                                  child: widget.app?.appIcon == null
+                                  child: widget.app?.appIcon == null &&
+                                          _appIcon == null
                                       ? const Icon(
                                           CupertinoIcons.question_circle_fill,
                                           color: Colors.grey,
@@ -1023,7 +1024,20 @@ The developer, ???, indicated that the app's privacy practices may include handl
                                                   const Text('iPhone'),
                                                   CupertinoSwitch(
                                                       value: true,
-                                                      onChanged: (value) {}),
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          if (compatibility
+                                                              .contains(
+                                                                  'iPhone')) {
+                                                            compatibility
+                                                                .remove(
+                                                                    'iPhone');
+                                                          } else {
+                                                            compatibility
+                                                                .add('iPhone');
+                                                          }
+                                                        });
+                                                      }),
                                                 ],
                                               ),
                                               const GutterSmall(),
@@ -1032,7 +1046,19 @@ The developer, ???, indicated that the app's privacy practices may include handl
                                                   const Text('iPad'),
                                                   CupertinoSwitch(
                                                       value: true,
-                                                      onChanged: (value) {}),
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          if (compatibility
+                                                              .contains(
+                                                                  'iPad')) {
+                                                            compatibility
+                                                                .remove('iPad');
+                                                          } else {
+                                                            compatibility
+                                                                .add('iPad');
+                                                          }
+                                                        });
+                                                      }),
                                                 ],
                                               ),
                                             ],

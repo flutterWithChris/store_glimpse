@@ -7,6 +7,7 @@ import 'package:store_glimpse/app/router/app_router.dart';
 import 'package:store_glimpse/auth/bloc/auth_bloc.dart';
 import 'package:store_glimpse/auth/repository/auth_repository.dart';
 import 'package:store_glimpse/firebase_options.dart';
+import 'package:store_glimpse/login/cubit/login_cubit.dart';
 import 'package:store_glimpse/onboarding/bloc/onboarding_bloc.dart';
 import 'package:store_glimpse/preview/bloc/preview_bloc.dart';
 import 'package:store_glimpse/preview/repository/preview_repository.dart';
@@ -58,6 +59,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 SignupCubit(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => LoginCubit(
+              authRepository: context.read<AuthRepository>(),
+            ),
           ),
           BlocProvider(
             create: (context) => OnboardingBloc(
